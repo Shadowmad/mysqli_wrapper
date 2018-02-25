@@ -291,7 +291,7 @@ if (!$conn) {
 	function db_stmt_bind_param (
 		mysqli_stmt	$stmt,
 		string		$type,
-		mixed		$param
+					$param
 	) {
 		return mysqli_stmt_bind_param(
 			$stmt,
