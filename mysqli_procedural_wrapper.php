@@ -24,11 +24,11 @@
 ** @param int port to use to connect to MySQL DB. Specifies the port number to attempt to connect to the MySQL server. Optional.
 ** @return mysqli return object which represents the connection to a MySQL Server.
 **/
-$host 		=	'';
-$user		=	'';
-$password 	=	'';
-$db 		=	'';
-$port 		=	0000;
+$host 		=	'localhost';
+$user		=	'root';
+$password 	=	'root';
+$db 		=	'shadow_store';
+$port 		=	8889;
 
 // Create connection
 $conn = mysqli_connect(
@@ -58,6 +58,15 @@ if (!$conn) {
 	function db_select_db (string $dbname) {
 		global $conn;
 		return mysqli_select_db($conn, $dbname);
+	}
+
+	/**
+	** Number of affected rows using connection
+	** @return int num rows
+	**/
+	function db_affected_rows() {
+		global $conn;
+		return mysqli_affected_rows($conn);
 	}
 
 	/**
@@ -94,7 +103,7 @@ if (!$conn) {
 	** @param mixed data to bind
 	** @return array array<int, mixed> array[bool, mysqli_stmt]
 	**/
-	function db_bind_params_execute(
+	function db_stmt_bind_params_execute(
 		string	$sql_string,
 		array	$types,
 		array	$bind_params
@@ -115,7 +124,7 @@ if (!$conn) {
 		}
 
 		/* Prepare statement */
-		$stmt = db_prepare($sql_string);
+		$stmt = db_stmt_prepare($sql_string);
 		if($stmt === false) {
 		  trigger_error(
 			  'Wrong SQL: ' . $sql_string . ' Error: ' . mysqli_errno() . ' ' . mysqli_error(), E_USER_ERROR
@@ -123,10 +132,10 @@ if (!$conn) {
 		}
 
 		/* use call_user_func_array, as $stmt->bind_param('s', $param); does not accept params array */
-		call_user_func_array(array($stmt, 'bind_param'), $a_params);
+		call_user_func_array(array($stmt, 'db_stmt_bind_param'), $a_params);
 		/* Execute statement */
 		return array(
-			db_sql_exec($stmt),
+			db_stmt_sql_exec($stmt),
 			$stmt
 		);
 	}
