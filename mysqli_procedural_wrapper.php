@@ -132,7 +132,7 @@ if (!$conn) {
 		}
 
 		/* use call_user_func_array, as $stmt->bind_param('s', $param); does not accept params array */
-		call_user_func_array(array($stmt, 'db_stmt_bind_param'), $a_params);
+		call_user_func_array(array($stmt, 'bind_param'), $a_params);
 		/* Execute statement */
 		return array(
 			db_stmt_sql_exec($stmt),
